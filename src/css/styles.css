@@ -7,41 +7,15 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
-  border: 3px solid red;
   height: 100vh;
   margin: 0;
   padding: 0;
-}
-
-.user-dashboard {
-  border: 3px solid green;
-  margin: 5px;
-  height: 100%;
-}
-
-.dashboard-heading {
-  display: flex;
-  margin: 5px;
-  border: 3px solid orange;
-}
-
-.user-data {
-  display: flex;
-  justify-content: space-evenly;
-  border: 3px solid black;
-  margin: 5px;
-  height: 75%;
-}
-
-.past-bookings, .upcoming-bookings {
-  border: 3px solid pink;
 }
 
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 3px solid orange;
 }
 
 nav {
@@ -53,7 +27,6 @@ nav {
 
 .navigate-rooms {
   width: 98%;
-  border: 2px solid pink;
   text-align: center;
   height: 10%;
   margin: 5px;
@@ -64,17 +37,32 @@ nav {
   flex-wrap: wrap;
   justify-content: space-evenly;
   margin: 10px;
-  border: 3px solid black;
 }
 
 .room-card {
-  border: 3px solid gray;
   margin: 5px;
 }
 
 img {
   height: 200px;
   width: 200px;
+}
+
+.user-dashboard {
+  margin: 5px;
+  height: 100%;
+}
+
+.dashboard-heading {
+  display: flex;
+  margin: 5px;
+}
+
+.user-data {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 5px;
+  height: 75%;
 }
 
 .material-symbols-outlined {
