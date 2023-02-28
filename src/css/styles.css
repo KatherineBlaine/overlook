@@ -26,9 +26,15 @@ body {
 }
 
 .user-data {
+  display: flex;
+  justify-content: space-evenly;
   border: 3px solid black;
   margin: 5px;
   height: 75%;
+}
+
+.past-bookings, .upcoming-bookings {
+  border: 3px solid pink;
 }
 
 header {
