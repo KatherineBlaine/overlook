@@ -4,12 +4,85 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webpack Starter Kit</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <title>Overlook</title>
 </head>
 <body>
-  <img src="./images/turing-logo.png" alt="turing logo">
+  <header class="main-header">
+    <h1>OVERLOOK</h1>
+    <nav>
+      <p><span class="material-symbols-outlined">account_circle</span>Hello, User!</p>
+      <button id="nav-button">My Bookings</button>
+    </nav>
+  </header>
+  <main id="main-page">
+    <nav class="navigate-rooms">search<span class="material-symbols-outlined">search</span></nav>
+    <section class="all-room-cards">
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+      <figure class="room-card">
+        <img src="./images/turing-logo.png" alt="test">
+        <figcaption>Hello!</figcaption>
+      </figure>
+    </section>
+  </main>
+  <section class="user-dashboard hidden" id="user-dashboard">
+    <section class="dashboard-heading">
+      <h1><span class="material-symbols-outlined">account_circle</span>Username</h1>
+    </section>
+    <section class="user-data">
+      <section class="past-bookings">
+        <h2>Past Bookings</h2>
+      </section>
+      <section class="upcoming-bookings">
+        <h2>Upcoming Bookings</h2>
+      </section>
+    </section>
+  </section>
   
-  <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
+ 
   <script src="bundle.js"></script>
 
 </body>

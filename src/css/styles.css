@@ -1,3 +1,90 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 body {
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+  display: flex;
+  flex-direction: column;
+  border: 3px solid red;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.user-dashboard {
+  border: 3px solid green;
+  margin: 5px;
+  height: 100%;
+}
+
+.dashboard-heading {
+  display: flex;
+  margin: 5px;
+  border: 3px solid orange;
+}
+
+.user-data {
+  display: flex;
+  justify-content: space-evenly;
+  border: 3px solid black;
+  margin: 5px;
+  height: 75%;
+}
+
+.past-bookings, .upcoming-bookings {
+  border: 3px solid pink;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 3px solid orange;
+}
+
+nav {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.navigate-rooms {
+  width: 98%;
+  border: 2px solid pink;
+  text-align: center;
+  height: 10%;
+  margin: 5px;
+}
+
+.all-room-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 10px;
+  border: 3px solid black;
+}
+
+.room-card {
+  border: 3px solid gray;
+  margin: 5px;
+}
+
+img {
+  height: 200px;
+  width: 200px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+.hidden {
+  display: none;
 }
