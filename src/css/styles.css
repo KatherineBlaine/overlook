@@ -41,6 +41,14 @@ h1 {
   color: white;
 }
 
+footer {
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+  width: 100vw;
+  background-color: gray;
+}
+
 .search-box {
   width: 100px;
   height: 30px;
