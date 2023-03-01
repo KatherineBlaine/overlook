@@ -7,10 +7,13 @@ import './css/styles.css';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
 
+// import 'js-datepicker/src/datepicker';
 import fetchAllData from '../api-calls';
 import User from '../classes/user-class';
 import Booking from '../classes/bookings-class';
 import Room from '../classes/rooms-class';
+import Datepicker from 'Datepicker.js/src';
+
 
 let user, bookings, rooms;
 let view = 'main';
@@ -22,6 +25,15 @@ const allRoomCards = document.getElementById('all-room-cards');
 const userBookings = document.getElementById('user-bookings')
 const userPayments = document.getElementById('user-payments');
 const dashboardHeading = document.getElementById('dashboard-username');
+const navBar = document.getElementById('navigate-rooms')
+const datepicker = new Datepicker('#datepicker');
+// const datepicker = new Datepicker('#datepicker');
+// console.log(datepicker)
+
+
+
+
+// console.log(picker)
 
 window.addEventListener('load', () => {
   fetchAllData()
@@ -71,6 +83,8 @@ const populatePage = () => {
   <p>You have spent $${Math.round(totalUserPayments)}</p>
   `
   dashboardHeading.innerText = user.name;
+  
+  
 
 }
 
