@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 
 
 let view = 'main';
-let user, bookings, allRooms, selectedDate, currentRooms, roomCards, selectedRoom;
+let user, bookings, allRooms, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom;
 
 const navButton = document.getElementById('nav-button');
 const mainPage = document.getElementById('main-page');
@@ -21,6 +21,9 @@ const dashboardHeading = document.getElementById('dashboard-username');
 const navBar = document.getElementById('navigate-rooms');
 const datepicker = document.getElementById('datepicker');
 const roomTypeDropdown = document.getElementById('room-type-dropdown');
+const footer = document.getElementById('footer');
+const bookRoomButton = document.getElementById('book-room-button');
+const bookingPage = document.getElementById('booking-page')
 
 window.addEventListener('load', () => {
   fetchAllData()
@@ -38,7 +41,10 @@ window.addEventListener('load', () => {
     })
 })
 
-
+bookRoomButton.addEventListener('click', () => {
+  hide(footer)
+  populateBookingPage();
+})
 
 roomTypeDropdown.addEventListener('change', () => {
   filterRoomsByType();
@@ -48,6 +54,20 @@ datepicker.addEventListener('change', () => {
   pickDate();
   filterAllRoomsByDate();
 })
+
+const populateBookingPage = () => {
+  bookingPage.innerHTML = `
+  <h1>Book Room ${selectedRoom.number} at Overlook Hotel for ${selectedDateDOM}</h1>
+  <h2>${selectedRoom.roomType}</h2>
+  <h3>${selectedRoom.numBeds}${selectedRoom.bedSize}</h3>
+  <h4>${selectedRoom.costPerNight} per night</h4>
+  <button>Confirm Booking</button>
+  `
+  view = 'booking'
+  hide(mainPage);
+  show(bookingPage);
+
+}
 
 const filterRoomsByType = () => {
   if (roomTypeDropdown.value !== 'select-value') {
@@ -64,11 +84,12 @@ const pickDate = () => {
   if (roomTypeDropdown.value !== 'select-value') {
     roomTypeDropdown.value = 'select-value';
   }
-  selectedDate = dayjs(datepicker.value).format('YYYY/MM/DD');
+  selectedDateData = dayjs(datepicker.value).format('YYYY/MM/DD');
+  selectedDateDOM = dayjs(datepicker.value).format('MM/DD/YYYY');
 }
 
 const filterAllRoomsByDate = () => {
-  let unavailableRoomNums = bookings.filter(booking => booking.date === selectedDate).map(booking => booking.roomNumber);
+  let unavailableRoomNums = bookings.filter(booking => booking.date === selectedDateData).map(booking => booking.roomNumber);
 
   currentRooms = allRooms.filter(room => !unavailableRoomNums.includes(room.number));
 
@@ -112,15 +133,17 @@ const populateMainPage = (roomsToDisplay) => {
 
   roomCards.forEach(roomCard => {
     roomCard.addEventListener('click', (event) => {
+      let selectedRoomNum
+      resetSelected();
       if (event.target.className === 'card-data') {
-        resetSelected();
         event.target.parentNode.classList.add('selected-room-card')
-        selectedRoom = event.target.parentNode.id;
+        selectedRoomNum = event.target.parentNode.id;
       } else if(event.target.className.includes('card-data')) {
-        resetSelected();
         event.target.classList.add('selected-room-card')
-        selectedRoom = event.target.id;
+        selectedRoomNum = event.target.id;
       }
+      selectedRoom = allRooms.find(room => selectedRoomNum === room.number.toString())
+      show(footer)
     })
   })
 }
@@ -162,13 +185,23 @@ navButton.addEventListener('click', () => {
   if (view === 'main') {
     hide(mainPage);
     show(userDashboard);
+    hide(footer)
     view = 'dashboard';
     navButton.innerText = 'Home';
-  } else {
+  } else if (view === 'dashboard') {
     show(mainPage);
     hide(userDashboard);
+    hide(footer)
     view = 'main';
     navButton.innerText = 'My Bookings';
+  } else if (view === 'booking') {
+    hide(bookingPage);
+    show(userDashboard);
+    hide(footer)
+    resetSelected()
+    navButton.innerText = 'Home';
+    bookRoomButton.innerText = 'Book Room'
+    view = 'dashboard'
   }
 })
 
