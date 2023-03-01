@@ -17,7 +17,11 @@ let view = 'main';
 const navButton = document.getElementById('nav-button');
 const mainPage = document.getElementById('main-page');
 const userDashboard = document.getElementById('user-dashboard');
-const userGreeting = document.getElementById('user-greeting')
+const userGreeting = document.getElementById('user-greeting');
+const allRoomCards = document.getElementById('all-room-cards');
+const userBookings = document.getElementById('user-bookings')
+const userPayments = document.getElementById('user-payments');
+const dashboardHeading = document.getElementById('dashboard-username');
 
 window.addEventListener('load', () => {
   fetchAllData()
@@ -28,18 +32,59 @@ window.addEventListener('load', () => {
       user = new User(userData[0])
       bookings = bookingData.map(booking => new Booking(booking))
       rooms = roomData.map(room => new Room(room))
+      populatePage();
     })
 })
+
+const populatePage = () => {
+  userGreeting.innerText += `Hello, ${user.name}`
+
+  rooms.forEach(room => {
+    allRoomCards.innerHTML += `
+    <figure class="room-card">
+        <h3>${room.roomType}</h3>
+        <p>Room #${room.number}</p>
+        <p>Beds: ${room.numBeds}</p>
+        <p>Price: $${room.costPerNight}</p>
+      </figcaption>
+    </figure>
+    `
+  })
+  const userBookingList = bookings.filter(booking => booking.userID === user.id)
+
+  userBookingList.forEach(userBooking => {
+    userBookings.innerHTML += `
+    <p>You have room ${userBooking.roomNumber} booked for ${userBooking.date}
+    `
+  })
+
+  const totalUserPayments = userBookingList.reduce((accumulator, currentBooking) => {
+    rooms.forEach(room => {
+      if (currentBooking.roomNumber === room.number) {
+        accumulator += room.costPerNight
+      }
+    })
+    return accumulator;
+  }, 0)
+
+  userPayments.innerHTML += `
+  <p>You have spent $${Math.round(totalUserPayments)}</p>
+  `
+  dashboardHeading.innerText = user.name;
+
+}
 
 navButton.addEventListener('click', () => {
   if (view === 'main') {
     hide(mainPage)
     show(userDashboard)
     view = 'dashboard'
+    navButton.innerText = 'Home'
   } else {
     show(mainPage)
     hide(userDashboard)
     view = 'main'
+    navButton.innerText = 'My Bookings'
   }
 })
 

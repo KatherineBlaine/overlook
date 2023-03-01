@@ -10,77 +10,45 @@
 <body>
   <header class="main-header">
     <h1>OVERLOOK</h1>
-    <nav>
-      <p id="user-greeting"><span class="material-symbols-outlined">account_circle</span>Hello, User!</p>
+    <nav class="account-info">
+      <span class="material-symbols-outlined">account_circle</span>
+      <p id="user-greeting"></p>
       <button id="nav-button">My Bookings</button>
     </nav>
   </header>
   <main id="main-page">
-    <nav class="navigate-rooms">search<span class="material-symbols-outlined">search</span></nav>
-    <section class="all-room-cards">
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-      <figure class="room-card">
-        <img src="./images/turing-logo.png" alt="test">
-        <figcaption>Hello!</figcaption>
-      </figure>
-    </section>
+    <nav class="navigate-rooms">
+      <label for="search-bar">
+        <input class="search-box"type="text" name="search-bar">
+        <button><span class="material-symbols-outlined">search</span></button>
+      </label>     
+      <label for="bed-num-dropdown">
+        <select class="search-box" type="select" name="bed-num-dropdown">
+          <option value="select-value">no filter</option>
+          <option value="select-value">1</option>
+          <option value="select-value">2</option>
+        </select>
+        <button>filter</button>
+      </label>
+    </nav>
+    <section class="all-room-cards" id="all-room-cards"></section>
   </main>
   <section class="user-dashboard hidden" id="user-dashboard">
     <section class="dashboard-heading">
-      <h1><span class="material-symbols-outlined">account_circle</span>Username</h1>
+      <span class="material-symbols-outlined">account_circle</span>
+      <h1 id="dashboard-username"></h1>
     </section>
     <section class="user-data">
-      <section class="past-bookings">
-        <h2>Past Bookings</h2>
+      <section id="user-bookings">
+        <h2>Bookings</h2>
       </section>
-      <section class="upcoming-bookings">
-        <h2>Upcoming Bookings</h2>
+      <section id="user-payments">
+        <h2>Payments</h2>
       </section>
     </section>
   </section>
+  
+ 
   <script src="bundle.js"></script>
 
 </body>
