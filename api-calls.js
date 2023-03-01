@@ -11,4 +11,14 @@ const fetchAllData = () => {
   ])
 }
 
-export default fetchAllData;
+const postNewBooking = (userID, date, roomNumber) => {
+  return fetch('http://localhost:3001/api/v1/bookings', {
+    method: 'POST',
+    body: JSON.stringify({ "userID": userID, "date": date, "roomNumber": roomNumber }), 
+    headers: {
+     'Content-Type': 'application/json'
+  }})
+    .then(response => response.json())
+}
+
+export {fetchAllData, postNewBooking};

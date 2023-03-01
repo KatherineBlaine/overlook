@@ -1,6 +1,6 @@
 import './css/styles.css';
 import './images/turing-logo.png'
-import fetchAllData from '../api-calls';
+import {fetchAllData, postNewBooking} from '../api-calls';
 import User from '../classes/user-class';
 import Booking from '../classes/bookings-class';
 import Room from '../classes/rooms-class';
@@ -23,7 +23,8 @@ const datepicker = document.getElementById('datepicker');
 const roomTypeDropdown = document.getElementById('room-type-dropdown');
 const footer = document.getElementById('footer');
 const bookRoomButton = document.getElementById('book-room-button');
-const bookingPage = document.getElementById('booking-page')
+const bookingPage = document.getElementById('booking-page');
+const confirmationPage = document.getElementById('confirmation-page');
 
 window.addEventListener('load', () => {
   fetchAllData()
@@ -61,12 +62,42 @@ const populateBookingPage = () => {
   <h2>${selectedRoom.roomType}</h2>
   <h3>${selectedRoom.numBeds}${selectedRoom.bedSize}</h3>
   <h4>${selectedRoom.costPerNight} per night</h4>
-  <button>Confirm Booking</button>
+  <button id="confirm-booking">Confirm Booking</button>
   `
-  view = 'booking'
+  let confirmBookingButton = document.getElementById('confirm-booking');
+
+  confirmBookingButton.addEventListener('click', () => {
+    refreshUserBookings();
+    populateConfirmationPage();
+  })
+
+  view = 'booking';
   hide(mainPage);
   show(bookingPage);
 
+}
+
+const populateConfirmationPage = () => {
+  confirmationPage.innerHTML = `
+  <h1>BOOKING CONFIRMATION</h1>
+  <h2>You have booked the ${selectedRoom.roomType} at the Outlook Hotel! We look forward to seeing you on ${selectedDateDOM}</h2>
+  `
+  hide(bookingPage);
+  show(confirmationPage);
+  view = 'confirmation';
+  navButton.innerText = 'Home';
+}
+
+const refreshUserBookings = () => {
+  postNewBooking(user.id, selectedDateData, selectedRoom.number)
+    .then(() => {
+      fetchAllData()
+        .then(data => {
+          const bookingData = data[2].bookings;
+          bookings = bookingData.map(booking => new Booking(booking));
+          populateUserDashboard();
+        })
+    })
 }
 
 const filterRoomsByType = () => {
@@ -157,6 +188,9 @@ const resetSelected = () => {
 }
 
 const populateUserDashboard = () => {
+  userPayments.innerHTML = '';
+  dashboardHeading.innerText = '';
+  userBookings.innerHTML = '';
   const userBookingList = bookings.filter(booking => booking.userID === user.id);
 
   userBookingList.forEach(userBooking => {
@@ -202,6 +236,11 @@ navButton.addEventListener('click', () => {
     navButton.innerText = 'Home';
     bookRoomButton.innerText = 'Book Room'
     view = 'dashboard'
+  } else {
+    hide(confirmationPage);
+    show(mainPage);
+    view = 'main'
+    navButton.innerText = 'My Bookings';
   }
 })
 
