@@ -1,7 +1,6 @@
-
 const fetchApi = (url) => {
   return fetch(`http://localhost:3001/api/v1/${url}`)
-    .then((response) => response.json())
+    .then((response) => response.json());
 }
 
 const fetchAllData = () => {
