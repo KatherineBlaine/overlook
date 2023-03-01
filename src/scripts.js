@@ -16,7 +16,7 @@ import Room from '../classes/rooms-class';
 import dayjs from 'dayjs';
 
 
-let user, bookings, rooms, date;
+let user, bookings, allRooms, selectedDate;
 let view = 'main';
 const navButton = document.getElementById('nav-button');
 const mainPage = document.getElementById('main-page');
@@ -38,9 +38,10 @@ window.addEventListener('load', () => {
       const bookingData = data[2].bookings;
       user = new User(userData[0])
       bookings = bookingData.map(booking => new Booking(booking))
-      rooms = roomData.map(room => new Room(room))
-      populateMainPage();
-      populateUserDashboard();
+      allRooms = roomData.map(room => new Room(room))
+      populateMainPage(allRooms);
+      // console.log(allRooms.length)
+      // populateUserDashboard();
     })
 })
 
@@ -49,13 +50,25 @@ datepicker.addEventListener('change', () => {
 })
 
 const pickDate = () => {
-  date = datepicker.value;
-  console.log(dayjs(date).format('YYYY/MM/DD'))
+  selectedDate = dayjs(datepicker.value).format('YYYY/MM/DD');
+
+  let unavailableRoomNums = bookings.filter(booking => booking.date === selectedDate).map(booking => booking.roomNumber)
+  console.log(unavailableRoomNums)
+
+  let availableRooms = allRooms.filter(room => !unavailableRoomNums.includes(room.number));
+
+  resetPage();
+  populateMainPage(availableRooms);
 }
 
-const populateMainPage = () => {
+const resetPage = () => {
+  userGreeting.innerText = '';
+  allRoomCards.innerHTML = '';
+}
+
+const populateMainPage = (roomsToDisplay) => {
   userGreeting.innerText += `Hello, ${user.name}`
-  rooms.forEach(room => {
+  roomsToDisplay.forEach(room => {
     allRoomCards.innerHTML += `
     <figure class="room-card">
         <h3>${room.roomType}</h3>
@@ -68,29 +81,29 @@ const populateMainPage = () => {
   })
 }
 
-const populateUserDashboard = () => {
-  const userBookingList = bookings.filter(booking => booking.userID === user.id)
+// const populateUserDashboard = () => {
+//   const userBookingList = bookings.filter(booking => booking.userID === user.id)
 
-  userBookingList.forEach(userBooking => {
-    userBookings.innerHTML += `
-    <p>You have room ${userBooking.roomNumber} booked for ${userBooking.date}
-    `
-  })
+//   userBookingList.forEach(userBooking => {
+//     userBookings.innerHTML += `
+//     <p>You have room ${userBooking.roomNumber} booked for ${userBooking.date}
+//     `
+//   })
 
-  const totalUserPayments = userBookingList.reduce((accumulator, currentBooking) => {
-    rooms.forEach(room => {
-      if (currentBooking.roomNumber === room.number) {
-        accumulator += room.costPerNight
-      }
-    })
-    return accumulator;
-  }, 0)
+//   const totalUserPayments = userBookingList.reduce((accumulator, currentBooking) => {
+//     rooms.forEach(room => {
+//       if (currentBooking.roomNumber === room.number) {
+//         accumulator += room.costPerNight
+//       }
+//     })
+//     return accumulator;
+//   }, 0)
 
-  userPayments.innerHTML += `
-  <p>You have spent $${Math.round(totalUserPayments)}</p>
-  `
-  dashboardHeading.innerText = user.name;
-}
+//   userPayments.innerHTML += `
+//   <p>You have spent $${Math.round(totalUserPayments)}</p>
+//   `
+//   dashboardHeading.innerText = user.name;
+// }
 
 navButton.addEventListener('click', () => {
   if (view === 'main') {
