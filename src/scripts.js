@@ -7,15 +7,16 @@ import './css/styles.css';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
 
-// import 'js-datepicker/src/datepicker';
+
 import fetchAllData from '../api-calls';
 import User from '../classes/user-class';
 import Booking from '../classes/bookings-class';
 import Room from '../classes/rooms-class';
-import Datepicker from 'Datepicker.js/src';
+// import { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 
-let user, bookings, rooms;
+let user, bookings, rooms, date;
 let view = 'main';
 const navButton = document.getElementById('nav-button');
 const mainPage = document.getElementById('main-page');
@@ -26,14 +27,8 @@ const userBookings = document.getElementById('user-bookings')
 const userPayments = document.getElementById('user-payments');
 const dashboardHeading = document.getElementById('dashboard-username');
 const navBar = document.getElementById('navigate-rooms')
-const datepicker = new Datepicker('#datepicker');
-// const datepicker = new Datepicker('#datepicker');
-// console.log(datepicker)
-
-
-
-
-// console.log(picker)
+const datepicker = document.getElementById('datepicker')
+// const datepicker = new Datepicker('#datepicker')
 
 window.addEventListener('load', () => {
   fetchAllData()
@@ -44,13 +39,22 @@ window.addEventListener('load', () => {
       user = new User(userData[0])
       bookings = bookingData.map(booking => new Booking(booking))
       rooms = roomData.map(room => new Room(room))
-      populatePage();
+      populateMainPage();
+      populateUserDashboard();
     })
 })
 
-const populatePage = () => {
-  userGreeting.innerText += `Hello, ${user.name}`
+datepicker.addEventListener('change', () => {
+  pickDate();
+})
 
+const pickDate = () => {
+  date = datepicker.value;
+  console.log(dayjs(date).format('YYYY/MM/DD'))
+}
+
+const populateMainPage = () => {
+  userGreeting.innerText += `Hello, ${user.name}`
   rooms.forEach(room => {
     allRoomCards.innerHTML += `
     <figure class="room-card">
@@ -60,8 +64,11 @@ const populatePage = () => {
         <p>Price: $${room.costPerNight}</p>
       </figcaption>
     </figure>
-    `
+    `;
   })
+}
+
+const populateUserDashboard = () => {
   const userBookingList = bookings.filter(booking => booking.userID === user.id)
 
   userBookingList.forEach(userBooking => {
@@ -83,9 +90,6 @@ const populatePage = () => {
   <p>You have spent $${Math.round(totalUserPayments)}</p>
   `
   dashboardHeading.innerText = user.name;
-  
-  
-
 }
 
 navButton.addEventListener('click', () => {
