@@ -28,5 +28,10 @@
     "build": "webpack",
     "test": "mochapack 'test/**/*.js'",
     "lint": "./node_modules/.bin/eslint 'src/**.js' 'test/**.js'"
+  },
+  "dependencies": {
+    "Datepicker.js": "^0.1.1",
+    "dayjs": "^1.11.7",
+    "js-datepicker": "^5.18.2"
   }
 }

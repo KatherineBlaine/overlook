@@ -17,13 +17,14 @@
     </nav>
   </header>
   <main id="main-page">
-    <nav class="navigate-rooms">
+    <nav class="navigate-rooms" id="navigate-rooms">
+      <input type="date" class="datepicker" id="datepicker">
       <label for="search-bar">
         <input class="search-box"type="text" name="search-bar">
-        <button><span class="material-symbols-outlined">search</span></button>
+        <button id="search-button"><span class="material-symbols-outlined">search</span></button>
       </label>     
-      <label for="bed-num-dropdown">
-        <select class="search-box" type="select" name="bed-num-dropdown">
+      <label for="room-type-dropdown">
+        <select class="search-box" type="select" name="room-type-dropdown">
           <option value="select-value">no filter</option>
           <option value="select-value">1</option>
           <option value="select-value">2</option>
@@ -51,7 +52,6 @@
     <button>Book Room</button>
   </footer>
   
- 
   <script src="bundle.js"></script>
 
 </body>

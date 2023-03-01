@@ -33,12 +33,12 @@ h1 {
   display: flex;
   width: 98%;
   text-align: center;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   height: 10%;
   margin: 5px;
   background-color: gray;
-  color: white;
+  color: pink;
 }
 
 footer {
@@ -99,6 +99,10 @@ img {
   'opsz' 48
 }
 
+
+.datepicker {
+  color: orange;
+}
 .hidden {
   display: none;
 }
