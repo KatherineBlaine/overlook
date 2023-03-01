@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 
 
 let view = 'main';
-let user, bookings, allRooms, selectedDate, currentRooms;
+let user, bookings, allRooms, selectedDate, currentRooms, roomCards, selectedRoom;
 
 const navButton = document.getElementById('nav-button');
 const mainPage = document.getElementById('main-page');
@@ -37,6 +37,8 @@ window.addEventListener('load', () => {
       populateUserDashboard();
     })
 })
+
+
 
 roomTypeDropdown.addEventListener('change', () => {
   filterRoomsByType();
@@ -96,14 +98,38 @@ const populateMainPage = (roomsToDisplay) => {
   
   roomsToDisplay.forEach(room => {
     allRoomCards.innerHTML += `
-    <figure class="room-card">
-        <h3>${room.roomType}</h3>
-        <p>Room #${room.number}</p>
-        <p>Beds: ${room.numBeds}</p>
-        <p>Price: $${room.costPerNight}</p>
+    <figure class="room-card card-data" id="${room.number}">
+        <h3 class="card-data">${room.roomType}</h3>
+        <p class="card-data">Room #${room.number}</p>
+        <p class="card-data">Beds: ${room.numBeds}</p>
+        <p class="card-data">Price: $${room.costPerNight}</p>
       </figcaption>
     </figure>
     `;
+  })
+
+  roomCards = document.querySelectorAll('.room-card');
+
+  roomCards.forEach(roomCard => {
+    roomCard.addEventListener('click', (event) => {
+      if (event.target.className === 'card-data') {
+        resetSelected();
+        event.target.parentNode.classList.add('selected-room-card')
+        selectedRoom = event.target.parentNode.id;
+      } else if(event.target.className.includes('card-data')) {
+        resetSelected();
+        event.target.classList.add('selected-room-card')
+        selectedRoom = event.target.id;
+      }
+    })
+  })
+}
+
+const resetSelected = () => {
+  roomCards.forEach(card => {
+    if (card.className.includes('selected-room-card')) {
+      card.classList.remove('selected-room-card')
+    }
   })
 }
 

@@ -69,6 +69,10 @@ footer {
   border: 1px solid black;
 }
 
+.selected-room-card {
+  border: 2px solid blue;
+}
+
 img {
   height: 200px;
   width: 200px;
