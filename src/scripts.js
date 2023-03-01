@@ -16,7 +16,7 @@ import Room from '../classes/rooms-class';
 import dayjs from 'dayjs';
 
 
-let user, bookings, allRooms, selectedDate;
+let user, bookings, allRooms, selectedDate, currentRooms;
 let view = 'main';
 const navButton = document.getElementById('nav-button');
 const mainPage = document.getElementById('main-page');
@@ -28,6 +28,7 @@ const userPayments = document.getElementById('user-payments');
 const dashboardHeading = document.getElementById('dashboard-username');
 const navBar = document.getElementById('navigate-rooms')
 const datepicker = document.getElementById('datepicker')
+const roomTypeDropdown = document.getElementById('room-type-dropdown')
 // const datepicker = new Datepicker('#datepicker')
 
 window.addEventListener('load', () => {
@@ -40,18 +41,48 @@ window.addEventListener('load', () => {
       bookings = bookingData.map(booking => new Booking(booking))
       allRooms = roomData.map(room => new Room(room))
       populateMainPage(allRooms);
-      // console.log(allRooms.length)
-      // populateUserDashboard();
+      populateRoomTypeDropdown(allRooms);
+      populateUserDashboard();
     })
 })
 
+const populateRoomTypeDropdown = (roomsToDisplay) => {
+  const availableRoomTypes = [...new Set(roomsToDisplay.map(room => room.roomType))]
+
+  availableRoomTypes.forEach(roomType => {
+    roomTypeDropdown.innerHTML += `
+    <option value="${roomType}">${roomType}</option>
+    `
+  })
+
+}
+
+roomTypeDropdown.addEventListener('change', () => {
+  filterRoomsByType();
+})
+
+const filterRoomsByType = () => {
+  if (roomTypeDropdown.value !== 'select-value') {
+    let filteredRooms = allRooms.filter(room => room.roomType === roomTypeDropdown.value)
+    resetPage();
+    populateMainPage(filteredRooms)
+  } else {
+    resetPage();
+    populateMainPage(allRooms)
+  }
+}
+
+
 datepicker.addEventListener('change', () => {
   pickDate();
+  filterAllRoomsByDate();
 })
 
 const pickDate = () => {
   selectedDate = dayjs(datepicker.value).format('YYYY/MM/DD');
+}
 
+const filterAllRoomsByDate = () => {
   let unavailableRoomNums = bookings.filter(booking => booking.date === selectedDate).map(booking => booking.roomNumber)
   console.log(unavailableRoomNums)
 
@@ -81,29 +112,29 @@ const populateMainPage = (roomsToDisplay) => {
   })
 }
 
-// const populateUserDashboard = () => {
-//   const userBookingList = bookings.filter(booking => booking.userID === user.id)
+const populateUserDashboard = () => {
+  const userBookingList = bookings.filter(booking => booking.userID === user.id)
 
-//   userBookingList.forEach(userBooking => {
-//     userBookings.innerHTML += `
-//     <p>You have room ${userBooking.roomNumber} booked for ${userBooking.date}
-//     `
-//   })
+  userBookingList.forEach(userBooking => {
+    userBookings.innerHTML += `
+    <p>You have room ${userBooking.roomNumber} booked for ${userBooking.date}
+    `
+  })
 
-//   const totalUserPayments = userBookingList.reduce((accumulator, currentBooking) => {
-//     rooms.forEach(room => {
-//       if (currentBooking.roomNumber === room.number) {
-//         accumulator += room.costPerNight
-//       }
-//     })
-//     return accumulator;
-//   }, 0)
+  const totalUserPayments = userBookingList.reduce((accumulator, currentBooking) => {
+    allRooms.forEach(room => {
+      if (currentBooking.roomNumber === room.number) {
+        accumulator += room.costPerNight
+      }
+    })
+    return accumulator;
+  }, 0)
 
-//   userPayments.innerHTML += `
-//   <p>You have spent $${Math.round(totalUserPayments)}</p>
-//   `
-//   dashboardHeading.innerText = user.name;
-// }
+  userPayments.innerHTML += `
+  <p>You have spent $${Math.round(totalUserPayments)}</p>
+  `
+  dashboardHeading.innerText = user.name;
+}
 
 navButton.addEventListener('click', () => {
   if (view === 'main') {
