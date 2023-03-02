@@ -12,6 +12,7 @@ import './images/overlook-hotel.png';
 
 let view = 'home';
 let user, bookings, allRooms, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom;
+const currentDate = '2022/01/01';
 
 const myBookingsButton = document.getElementById('my-bookings');
 const seeRoomsButton = document.getElementById('stay-with-us');
@@ -21,7 +22,8 @@ const mainPage = document.getElementById('main-page');
 const userDashboard = document.getElementById('user-dashboard');
 const userGreeting = document.getElementById('user-greeting');
 const allRoomCards = document.getElementById('all-room-cards');
-const userBookings = document.getElementById('user-bookings')
+const upcomingBookings = document.getElementById('upcoming-bookings')
+const pastBookings = document.getElementById('past-bookings');
 const userPayments = document.getElementById('user-payments');
 const dashboardHeading = document.getElementById('dashboard-username');
 const navBar = document.getElementById('navigate-rooms');
@@ -250,13 +252,20 @@ const resetSelected = () => {
 const populateUserDashboard = () => {
   userPayments.innerHTML = '';
   dashboardHeading.innerText = '';
-  userBookings.innerHTML = '';
+  pastBookings.innerHTML = '';
+  upcomingBookings.innerHTML = '';
   const userBookingList = bookings.filter(booking => booking.userID === user.id);
 
   userBookingList.forEach(userBooking => {
-    userBookings.innerHTML += `
-    <p>You have room ${userBooking.roomNumber} booked for ${userBooking.date}
-    `;
+    roomCards.forEach(roomCard => {
+      if (userBooking.roomNumber.toString() === roomCard.id && dayjs(userBooking.date).isBefore(dayjs(currentDate))) {
+        pastBookings.innerHTML += `<h2>Past Bookings</h2>`
+        pastBookings.innerHTML += roomCard.innerHTML;
+      } else {
+        upcomingBookings.innerHTML += `<h2>Upcoming Bookings</h2>`
+        upcomingBookings.innerHTML += roomCard.innerHTML;
+      }
+    })
   })
 
   const totalUserPayments = userBookingList.reduce((accumulator, currentBooking) => {
