@@ -5,12 +5,18 @@ import User from '../classes/user-class';
 import Booking from '../classes/bookings-class';
 import Room from '../classes/rooms-class';
 import dayjs from 'dayjs';
+import './images/hotel-room.png';
+import './images/overlook-hotel.png';
 
 
-let view = 'main';
+
+let view = 'home';
 let user, bookings, allRooms, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom;
 
-const navButton = document.getElementById('nav-button');
+const myBookingsButton = document.getElementById('my-bookings');
+const seeRoomsButton = document.getElementById('stay-with-us');
+const homeButton = document.getElementById('home')
+
 const mainPage = document.getElementById('main-page');
 const userDashboard = document.getElementById('user-dashboard');
 const userGreeting = document.getElementById('user-greeting');
@@ -25,6 +31,9 @@ const footer = document.getElementById('footer');
 const bookRoomButton = document.getElementById('book-room-button');
 const bookingPage = document.getElementById('booking-page');
 const confirmationPage = document.getElementById('confirmation-page');
+
+
+const homeImage = document.getElementById('main-image');
 
 window.addEventListener('load', () => {
   fetchAllData()
@@ -43,7 +52,7 @@ window.addEventListener('load', () => {
 })
 
 bookRoomButton.addEventListener('click', () => {
-  hide(footer)
+  
   populateBookingPage();
 })
 
@@ -56,26 +65,75 @@ datepicker.addEventListener('change', () => {
   filterAllRoomsByDate();
 })
 
+seeRoomsButton.addEventListener('click', () => {
+  if(view === 'home') {
+    hide(homeImage);
+  } else if (view === 'dashboard') {
+    hide(userDashboard);
+  }
+  show(mainPage);
+  show(homeButton);
+  show(myBookingsButton);
+  hide(seeRoomsButton);
+  view = 'main';
+})
+
+myBookingsButton.addEventListener('click', () => {
+  if (view === 'home') {
+    hide(homeImage)
+  } else if (view === 'main') {
+    hide(mainPage);
+  }
+  show(userDashboard);
+  hide(myBookingsButton);
+  hide(footer);
+  show(homeButton);
+  show(seeRoomsButton);
+  view = 'dashboard';
+})
+
+homeButton.addEventListener('click', () => {
+  if (view === 'main') {
+    hide(mainPage);
+    show(seeRoomsButton)
+  } else if (view === 'dashboard') {
+    hide(userDashboard);
+    show(myBookingsButton)
+  }
+  show(homeImage)
+  hide(homeButton)
+  view = 'home'
+})
+
 const populateBookingPage = () => {
-  bookingPage.innerHTML = `
-  <h1>Book Room ${selectedRoom.number} at Overlook Hotel for ${selectedDateDOM}</h1>
-  <h2>${selectedRoom.roomType}</h2>
-  <h3>${selectedRoom.numBeds}${selectedRoom.bedSize}</h3>
-  <h4>${selectedRoom.costPerNight} per night</h4>
-  <button id="confirm-booking">Confirm Booking</button>
-  `
-  let confirmBookingButton = document.getElementById('confirm-booking');
+    bookingPage.innerHTML = `
+    <h1>Book Room ${selectedRoom.number} at Overlook Hotel for ${selectedDateDOM}</h1>
+    <h2>${selectedRoom.roomType}</h2>
+    <h3>${selectedRoom.numBeds}${selectedRoom.bedSize}</h3>
+    <h4>${selectedRoom.costPerNight} per night</h4>
+    <button id="confirm-booking">Confirm Booking</button>
+    `
+    let confirmBookingButton = document.getElementById('confirm-booking');
+  
+    confirmBookingButton.addEventListener('click', () => {
+      refreshUserBookings();
+      populateConfirmationPage();
+    })
+  
+    view = 'booking';
+    hide(mainPage);
+    hide(footer);
+    show(bookingPage);
+  }
 
-  confirmBookingButton.addEventListener('click', () => {
-    refreshUserBookings();
-    populateConfirmationPage();
-  })
-
-  view = 'booking';
-  hide(mainPage);
-  show(bookingPage);
-
+const checkQueryConditions = () => {
+  if (!selectedDateData) {
+    footer.innerHTML += `
+    <p>Please select a date to see room availability!</p>`
 }
+}
+
+
 
 const populateConfirmationPage = () => {
   confirmationPage.innerHTML = `
@@ -147,14 +205,16 @@ const populateRoomTypeDropdown = (currentRooms) => {
 
 const populateMainPage = (roomsToDisplay) => {
   userGreeting.innerText += `Hello, ${user.name}`;
+
+  homeImage.innerHTML = '<img class="main-image" src="./images/overlook-hotel.png">'
   
   roomsToDisplay.forEach(room => {
     allRoomCards.innerHTML += `
     <figure class="room-card card-data" id="${room.number}">
-        <h3 class="card-data">${room.roomType}</h3>
-        <p class="card-data">Room #${room.number}</p>
-        <p class="card-data">Beds: ${room.numBeds}</p>
-        <p class="card-data">Price: $${room.costPerNight}</p>
+      <img src="./images/hotel-room.png" alt="room img">
+        <h2 class="card-data">${room.roomType}</h2>
+        <h3 class="card-data">${room.numBeds} ${room.bedSize} bed</h3>
+        <p class="card-data">$${room.costPerNight} per night</p>
       </figcaption>
     </figure>
     `;
@@ -215,34 +275,31 @@ const populateUserDashboard = () => {
 }
 
 
-navButton.addEventListener('click', () => {
-  if (view === 'main') {
-    hide(mainPage);
-    show(userDashboard);
-    hide(footer)
-    view = 'dashboard';
-    navButton.innerText = 'Home';
-  } else if (view === 'dashboard') {
-    show(mainPage);
-    hide(userDashboard);
-    hide(footer)
-    view = 'main';
-    navButton.innerText = 'My Bookings';
-  } else if (view === 'booking') {
-    hide(bookingPage);
-    show(userDashboard);
-    hide(footer)
-    resetSelected()
-    navButton.innerText = 'Home';
-    bookRoomButton.innerText = 'Book Room'
-    view = 'dashboard'
-  } else {
-    hide(confirmationPage);
-    show(mainPage);
-    view = 'main'
-    navButton.innerText = 'My Bookings';
-  }
-})
+// navButton.addEventListener('click', () => {
+//   if (view === 'main') {
+
+//     navButton.innerText = 'Home';
+//   } else if (view === 'dashboard') {
+//     show(mainPage);
+//     hide(userDashboard);
+//     hide(footer)
+//     view = 'main';
+//     navButton.innerText = 'My Bookings';
+//   } else if (view === 'booking') {
+//     hide(bookingPage);
+//     show(userDashboard);
+//     hide(footer)
+//     resetSelected()
+//     navButton.innerText = 'Home';
+//     bookRoomButton.innerText = 'Book Room'
+//     view = 'dashboard'
+//   } else {
+//     hide(confirmationPage);
+//     show(mainPage);
+//     view = 'main'
+//     navButton.innerText = 'My Bookings';
+//   }
+// })
 
 const hide = (element) => element.classList.add('hidden');
 const show = (element) => element.classList.remove('hidden');

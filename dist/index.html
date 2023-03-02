@@ -4,19 +4,33 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <title>Overlook</title>
 </head>
 <body>
-  <header class="main-header">
-    <h1>OVERLOOK</h1>
-    <nav class="account-info">
-      <span class="material-symbols-outlined">account_circle</span>
-      <p id="user-greeting"></p>
-      <button id="nav-button">My Bookings</button>
-    </nav>
+  <header>
+      <h1 class="site-title">The Overlook Hotel</h1>
+      <nav class="main-nav">
+        <button id="home" class="hidden">Home</button>
+        <button id="my-bookings">My Bookings</button>
+        <button id="stay-with-us">Book Your Stay</button>
+      </nav>
+      <div class="account-info">
+        <span class="material-symbols-outlined">account_circle</span>
+        <p id="user-greeting"></p>
+      </div>
   </header>
-  <main id="main-page">
+
+
+
+  <section class="main-image-section"id="main-image"></section>
+
+
+  <main id="main-page" class="hidden">
     <nav class="navigate-rooms" id="navigate-rooms">
       <input type="date" class="datepicker" id="datepicker">   
       <label for="room-type-dropdown">
