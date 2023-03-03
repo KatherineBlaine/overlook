@@ -2,13 +2,11 @@ import './css/styles.css';
 import './images/turing-logo.png'
 import {fetchAllData, postNewBooking} from '../api-calls';
 import User from '../classes/user-class';
-import Booking from '../classes/bookings-class';
+import Booking from '../classes/booking-class';
 import Room from '../classes/rooms-class';
 import dayjs from 'dayjs';
 import './images/hotel-room.png';
 import './images/overlook-hotel.png';
-
-
 
 let view = 'home';
 let user, bookings, allRooms, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom;
@@ -134,8 +132,6 @@ const checkQueryConditions = () => {
     <p>Please select a date to see room availability!</p>`
 }
 }
-
-
 
 const populateConfirmationPage = () => {
   confirmationPage.innerHTML = `
@@ -282,33 +278,6 @@ const populateUserDashboard = () => {
   `;
   dashboardHeading.innerText = user.name;
 }
-
-
-// navButton.addEventListener('click', () => {
-//   if (view === 'main') {
-
-//     navButton.innerText = 'Home';
-//   } else if (view === 'dashboard') {
-//     show(mainPage);
-//     hide(userDashboard);
-//     hide(footer)
-//     view = 'main';
-//     navButton.innerText = 'My Bookings';
-//   } else if (view === 'booking') {
-//     hide(bookingPage);
-//     show(userDashboard);
-//     hide(footer)
-//     resetSelected()
-//     navButton.innerText = 'Home';
-//     bookRoomButton.innerText = 'Book Room'
-//     view = 'dashboard'
-//   } else {
-//     hide(confirmationPage);
-//     show(mainPage);
-//     view = 'main'
-//     navButton.innerText = 'My Bookings';
-//   }
-// })
 
 const hide = (element) => element.classList.add('hidden');
 const show = (element) => element.classList.remove('hidden');
