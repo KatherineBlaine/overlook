@@ -43,9 +43,9 @@ window.addEventListener('load', () => {
       const roomData = data[1].rooms;
       const bookingData = data[2].bookings;
       bookings = bookingData.map(booking => new Booking(booking));
-      roomRepository = new RoomRepository(roomData).roomRepository;
-      user = new User(userData[0], bookings, roomRepository, currentDate);
-      currentRooms = roomRepository;
+      roomRepository = new RoomRepository(roomData);
+      user = new User(userData[0], bookings, roomRepository.rooms, currentDate);
+      currentRooms = roomRepository.rooms;
       populateMainPage(currentRooms);
       populateRoomTypeDropdown(currentRooms);
       populateUserDashboard();
@@ -65,6 +65,32 @@ datepicker.addEventListener('change', () => {
   filterAllRoomsByDate();
 })
 
+const pickDate = () => {
+  if (roomTypeDropdown.value !== 'select-value') {
+    roomTypeDropdown.value = 'select-value';
+  }
+  selectedDateData = dayjs(datepicker.value).format('YYYY/MM/DD');
+  selectedDateDOM = dayjs(datepicker.value).format('MM/DD/YYYY');
+}
+
+const filterAllRoomsByDate = () => {
+  currentRooms = roomRepository.filterByDate(selectedDateData, bookings);
+
+  resetPage();
+  populateMainPage(currentRooms);
+}
+
+const filterRoomsByType = () => {
+  if (roomTypeDropdown.value !== 'select-value') {
+    let filteredRooms = roomRepository.filterByRoomType(roomTypeDropdown.value)
+    resetPage();
+    populateMainPage(filteredRooms);
+  } else {
+    resetPage();
+    populateMainPage(currentRooms);
+  }
+}
+
 seeRoomsButton.addEventListener('click', () => {
   if(view === 'home') {
     hide(homeImage);
@@ -77,6 +103,17 @@ seeRoomsButton.addEventListener('click', () => {
   hide(seeRoomsButton);
   view = 'main';
 })
+const refreshUserBookings = () => {
+  postNewBooking(user.id, selectedDateData, selectedRoom.number)
+    .then(() => {
+      fetchAllData()
+        .then(data => {
+          const bookingData = data[2].bookings;
+          bookings = bookingData.map(booking => new Booking(booking));
+          populateUserDashboard();
+        })
+    })
+}
 
 myBookingsButton.addEventListener('click', () => {
   if (view === 'home') {
@@ -126,13 +163,6 @@ const populateBookingPage = () => {
     show(bookingPage);
   }
 
-const checkQueryConditions = () => {
-  if (!selectedDateData) {
-    footer.innerHTML += `
-    <p>Please select a date to see room availability!</p>`
-  }
-}
-
 const populateConfirmationPage = () => {
   confirmationPage.innerHTML = `
   <h1>BOOKING CONFIRMATION</h1>
@@ -144,52 +174,12 @@ const populateConfirmationPage = () => {
   navButton.innerText = 'Home';
 }
 
-const refreshUserBookings = () => {
-  postNewBooking(user.id, selectedDateData, selectedRoom.number)
-    .then(() => {
-      fetchAllData()
-        .then(data => {
-          const bookingData = data[2].bookings;
-          bookings = bookingData.map(booking => new Booking(booking));
-          populateUserDashboard();
-        })
-    })
-}
 
-const filterRoomsByType = () => {
-  if (roomTypeDropdown.value !== 'select-value') {
-    let filteredRooms = currentRooms.filterByRoomType(roomTypeDropdown.value)
-    resetPage();
-    populateMainPage(filteredRooms);
-  } else {
-    resetPage();
-    populateMainPage(roomRepository);
-  }
-}
-
-const pickDate = () => {
-  if (roomTypeDropdown.value !== 'select-value') {
-    roomTypeDropdown.value = 'select-value';
-  }
-  selectedDateData = dayjs(datepicker.value).format('YYYY/MM/DD');
-  selectedDateDOM = dayjs(datepicker.value).format('MM/DD/YYYY');
-}
-
-const filterAllRoomsByDate = () => {
-  // let unavailableRoomNums = bookings.filter(booking => booking.date === selectedDateData).map(booking => booking.roomNumber);
-
-  currentRooms = roomRepository.filterByDate(selectedDateData, bookings);
-
-  resetPage();
-  populateMainPage(currentRooms);
-}
-
+// DOM
 const resetPage = () => {
   userGreeting.innerText = '';
   allRoomCards.innerHTML = '';
 }
-
-// DOM
 
 const populateRoomTypeDropdown = (currentRooms) => {
   const availableRoomTypes = [...new Set(currentRooms.map(room => room.roomType))];
