@@ -7,20 +7,21 @@ import Room from '../classes/rooms-class';
 import dayjs from 'dayjs';
 import './images/hotel-room.png';
 import './images/overlook-hotel.png';
+import RoomRepository from '../classes/room-repository-class';
 
 let view = 'home';
-let user, bookings, allRooms, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom;
+let user, bookings, roomRepository, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom;
 const currentDate = '2022/01/01';
 
 const myBookingsButton = document.getElementById('my-bookings');
 const seeRoomsButton = document.getElementById('stay-with-us');
-const homeButton = document.getElementById('home')
+const homeButton = document.getElementById('home');
 
 const mainPage = document.getElementById('main-page');
 const userDashboard = document.getElementById('user-dashboard');
 const userGreeting = document.getElementById('user-greeting');
 const allRoomCards = document.getElementById('all-room-cards');
-const upcomingBookings = document.getElementById('upcoming-bookings')
+const upcomingBookings = document.getElementById('upcoming-bookings');
 const pastBookings = document.getElementById('past-bookings');
 const userPayments = document.getElementById('user-payments');
 const dashboardHeading = document.getElementById('dashboard-username');
@@ -41,10 +42,10 @@ window.addEventListener('load', () => {
       const userData = data[0].customers;
       const roomData = data[1].rooms;
       const bookingData = data[2].bookings;
-      user = new User(userData[0]);
       bookings = bookingData.map(booking => new Booking(booking));
-      allRooms = roomData.map(room => new Room(room));
-      currentRooms = allRooms;
+      roomRepository = new RoomRepository(roomData).roomRepository;
+      user = new User(userData[0], bookings, roomRepository, currentDate);
+      currentRooms = roomRepository;
       populateMainPage(currentRooms);
       populateRoomTypeDropdown(currentRooms);
       populateUserDashboard();
@@ -52,7 +53,6 @@ window.addEventListener('load', () => {
 })
 
 bookRoomButton.addEventListener('click', () => {
-  
   populateBookingPage();
 })
 
@@ -130,7 +130,7 @@ const checkQueryConditions = () => {
   if (!selectedDateData) {
     footer.innerHTML += `
     <p>Please select a date to see room availability!</p>`
-}
+  }
 }
 
 const populateConfirmationPage = () => {
@@ -158,12 +158,12 @@ const refreshUserBookings = () => {
 
 const filterRoomsByType = () => {
   if (roomTypeDropdown.value !== 'select-value') {
-    let filteredRooms = currentRooms.filter(room => room.roomType === roomTypeDropdown.value);
+    let filteredRooms = currentRooms.filterByRoomType(roomTypeDropdown.value)
     resetPage();
     populateMainPage(filteredRooms);
   } else {
     resetPage();
-    populateMainPage(allRooms);
+    populateMainPage(roomRepository);
   }
 }
 
@@ -176,9 +176,9 @@ const pickDate = () => {
 }
 
 const filterAllRoomsByDate = () => {
-  let unavailableRoomNums = bookings.filter(booking => booking.date === selectedDateData).map(booking => booking.roomNumber);
+  // let unavailableRoomNums = bookings.filter(booking => booking.date === selectedDateData).map(booking => booking.roomNumber);
 
-  currentRooms = allRooms.filter(room => !unavailableRoomNums.includes(room.number));
+  currentRooms = roomRepository.filterByDate(selectedDateData, bookings);
 
   resetPage();
   populateMainPage(currentRooms);
@@ -231,7 +231,7 @@ const populateMainPage = (roomsToDisplay) => {
         event.target.classList.add('selected-room-card')
         selectedRoomNum = event.target.id;
       }
-      selectedRoom = allRooms.find(room => selectedRoomNum === room.number.toString())
+      selectedRoom = roomRepository.find(room => selectedRoomNum === room.number.toString())
       show(footer)
     })
   })
@@ -250,7 +250,7 @@ const populateUserDashboard = () => {
   dashboardHeading.innerText = '';
   pastBookings.innerHTML = '';
   upcomingBookings.innerHTML = '';
-  const userBookingList = bookings.filter(booking => booking.userID === user.id);
+  const userBookingList = user.userBookings;
 
   userBookingList.forEach(userBooking => {
     roomCards.forEach(roomCard => {
@@ -264,14 +264,7 @@ const populateUserDashboard = () => {
     })
   })
 
-  const totalUserPayments = userBookingList.reduce((accumulator, currentBooking) => {
-    allRooms.forEach(room => {
-      if (currentBooking.roomNumber === room.number) {
-        accumulator += room.costPerNight;
-      }
-    })
-    return accumulator;
-  }, 0)
+  const totalUserPayments = userBookingList.getTotalDollarsSpent(roomRepository)
 
   userPayments.innerHTML += `
   <p>You have spent $${Math.round(totalUserPayments)}</p>

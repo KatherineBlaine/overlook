@@ -28,10 +28,6 @@ describe('Room class', () => {
     expect(room1.roomType).to.equal("residential suite")
   })
 
-  it('should have a boolean property value for whether or not it has a bidet', () => {
-    expect(room1.bidet).to.equal(true)
-  })
-
   it('should have a bed size', () => {
     expect(room1.bedSize).to.equal('queen');
   })

@@ -1,18 +1,30 @@
+import dayjs from 'dayjs';
+
 class User {
-  constructor(userData, bookingsRepository, rooms) {
+  constructor(userData, bookingsRepository, allRooms, todaysDate) {
     this.id = userData.id;
     this.name = userData.name;
-    this.userBookings = this.getUserBookings(bookingsRepository);
-    this.totalDollarsSpent = this.getTotalDollarsSpent(rooms);
+    this.allBookings = this.getAllBookings(bookingsRepository);
+    this.pastBookings = this.getPastBookings(todaysDate)
+    this.upcomingBookings = this.getUpcomingBookings(todaysDate);
+    this.totalSpendings = this.getTotalSpendings(allRooms);
   }
 
-  getUserBookings(bookingsRepository) {
-    return bookingsRepository.filter(booking => booking.userID === this.id)
+  getAllBookings(bookingsRepository) {
+    return bookingsRepository.filter(booking => booking.userID === this.id && booking.date)
   }
 
-  getTotalDollarsSpent(rooms) {
-    return this.userBookings.reduce((accumulator, currentBooking) => {
-      rooms.forEach(room => {
+  getPastBookings(todaysDate) {
+    return this.allBookings.filter(booking => dayjs(todaysDate).isAfter(booking.date))
+  }
+
+  getUpcomingBookings(todaysDate) {
+    return this.allBookings.filter(booking => dayjs(todaysDate).isBefore(booking.date))
+  }
+
+  getTotalSpendings(allRooms) {
+    return this.allBookings.reduce((accumulator, currentBooking) => {
+      allRooms.forEach(room => {
         if(room.number === currentBooking.roomNumber) {
           accumulator += room.costPerNight;
         }
