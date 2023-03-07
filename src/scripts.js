@@ -164,7 +164,7 @@ bookingDataTable.innerHTML += `
     <th>Price</th>
   </tr>`
 
-
+  
   user.allBookings.forEach(userBooking => {
     roomRepository.rooms.forEach(room => {
       if (room.number === userBooking.roomNumber) {
@@ -179,6 +179,14 @@ bookingDataTable.innerHTML += `
       }
     })
   })
+
+  const totalUserPayments = user.getTotalSpendings(roomRepository.rooms)
+  bookingDataTable.innerHTML += `
+  <tr>
+    <th>Total Spendings</th>
+    <th>${Math.round(totalUserPayments)}</th>
+  </tr>
+  `
 
   show(bookingDataTable)
   hide(userDashboard)
@@ -299,12 +307,6 @@ const populateUserDashboard = () => {
       }
     })
   })
-
-  const totalUserPayments = user.getTotalSpendings(roomRepository.rooms)
-
-  userPayments.innerHTML += `
-  <p>You have spent $${Math.round(totalUserPayments)}</p>
-  `;
 }
 
 const hide = (element) => element.classList.add('hidden');
