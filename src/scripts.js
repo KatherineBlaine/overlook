@@ -43,6 +43,7 @@ window.addEventListener('load', () => {
       const roomData = data[1].rooms;
       const bookingData = data[2].bookings;
       bookings = bookingData.map(booking => new Booking(booking));
+      // bookings = new BookingsRepository(bookingData, Booking);
       roomRepository = new RoomRepository(roomData);
       user = new User(userData[0], bookings, roomRepository.rooms, currentDate);
       currentRooms = roomRepository.rooms;
@@ -75,6 +76,8 @@ const pickDate = () => {
 
 const filterAllRoomsByDate = () => {
   currentRooms = roomRepository.filterByDate(selectedDateData, bookings);
+  // console.log(selectedDateData)
+  console.log(currentRooms)
 
   resetPage();
   populateMainPage(currentRooms);

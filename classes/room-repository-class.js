@@ -10,11 +10,8 @@ class RoomRepository {
   }
 
   filterByDate(date, bookings) {
-    const availability = bookings.filter(booking => booking.date !== date)
-    return [... new Set(availability.map(booking => booking.roomNumber))]
+    return this.rooms.filter(room => !room.findUnavailableDates(bookings).includes(date))
   }
-
-
 }
 
 export default RoomRepository;
