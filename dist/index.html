@@ -5,20 +5,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <title>Overlook</title>
 </head>
 <body>
-  <section id="login-page" class="login-page">
+  <section id="login-page" class="login-page hidden">
     <h1 class="site-title">The Overlook Hotel</h1>
     <section id="login-inputs" class="login-inputs">
       <label id="username" for="username-input">Username<input type="text" id="username-input" name="username-input"></label>
       <label id="password" for="password-input">Password<input type="text" id="password-input" name="password-input"></label>
       <button id="login-button">LOGIN</button>
     </section>
+  </section>
+    <section id="manager-dashboard" class="manager-dashboard">
+      <button id="test">test</button>
+      <h1>Manager Dashboard</h1>
+      <h2 id="available-rooms-header">Available Rooms</h2>
+      <p id="available-rooms"></p>
+      <h2 id="todays-revenue-header">Total Daily Revenue</h2>
+      <p id="todays-revenue"></p>
+      <h2 id="todays-ocupation-header">Occupation Percent</h2>
+      <p id="todays-occupation"></p>
   </section>
 
 

@@ -40,10 +40,16 @@ const passwordInput = document.getElementById('password-input')
 const header = document.getElementById('header')
 const loginPage = document.getElementById('login-page')
 
+const managerDashboard = document.getElementById('manager-dashboard')
+const availableRooms = document.getElementById('available-rooms')
+const todaysRevenue = document.getElementById('todays-revenue')
+const todaysOccupation = document.getElementById('todays-occupation')
 const homeImage = document.getElementById('main-image');
 
+const testButton = document.getElementById('test')
 
-loginButton.addEventListener('click', () => {
+
+window.addEventListener('load', () => {
   fetchAllData()
     .then(data => {
       storeLoginData()
@@ -52,16 +58,16 @@ loginButton.addEventListener('click', () => {
       const bookingData = data[2].bookings;
       bookings = bookingData.map(booking => new Booking(booking));
       roomRepository = new RoomRepository(roomData);
-      let currentUser = userData.find(user => `customer${user.id}` === currentUserName)
-      user = new User(currentUser, bookings, roomRepository.rooms, currentDate);
+      // let currentUser = userData.find(user => `customer${user.id}` === currentUserName)
+      // user = new User(currentUser, bookings, roomRepository.rooms, currentDate);
       // console.log(user)
       currentRooms = roomRepository.rooms;
-      populateMainPage(currentRooms);
-      populateRoomTypeDropdown(currentRooms);
-      populateUserDashboard();
-      hide(loginPage)
-      show(header)
-      show(homeImage)
+      // populateMainPage(currentRooms);
+      // populateRoomTypeDropdown(currentRooms);
+      // populateUserDashboard();
+      // hide(loginPage)
+      // show(header)
+      // show(homeImage)
     })
 })
 
@@ -70,6 +76,34 @@ const storeLoginData = () => {
   currentUserPassword = passwordInput.value;
 }
 
+test.addEventListener('click', () => {
+  populateManagerDashboard()
+})
+
+const populateManagerDashboard = () => {
+  let available = roomRepository.filterByDate('2022/01/11', bookings)
+  console.log(available)
+
+  available.forEach(availableRoom => {
+    availableRooms.innerHTML += `
+    <p>${availableRoom.number}</p>
+    `
+  })
+
+  let dailyRevenue = roomRepository.rooms.reduce((accumulator, currentRoom) => {
+    if (!available.includes(currentRoom)) {
+      accumulator += currentRoom.costPerNight;
+    }
+    return accumulator;
+  }, 0)
+
+  todaysRevenue.innerText = dailyRevenue;
+
+  let occupationPercent = (available.length / 25) * 100;
+
+  todaysOccupation.innerText = occupationPercent;
+
+}
 
 
 bookRoomButton.addEventListener('click', () => {
