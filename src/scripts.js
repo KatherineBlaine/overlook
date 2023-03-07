@@ -3,14 +3,13 @@ import './images/turing-logo.png'
 import {fetchAllData, postNewBooking} from '../api-calls';
 import User from '../classes/user-class';
 import Booking from '../classes/booking-class';
-import Room from '../classes/rooms-class';
 import dayjs from 'dayjs';
 import './images/hotel-room.png';
 import './images/overlook-hotel.png';
 import RoomRepository from '../classes/room-repository-class';
 
 let view = 'home';
-let user, bookings, roomRepository, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom, dashboardView, currentUserName, currentUserPassword;
+let user, bookings, roomRepository, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom, dashboardView, currentUserName, currentUserPassword, userType;
 const currentDate = '2022/01/01';
 
 const myBookingsButton = document.getElementById('my-bookings');
@@ -23,9 +22,6 @@ const userGreeting = document.getElementById('user-greeting');
 const allRoomCards = document.getElementById('all-room-cards');
 const upcomingBookings = document.getElementById('upcoming-bookings');
 const pastBookings = document.getElementById('past-bookings');
-const userPayments = document.getElementById('user-payments');
-const dashboardHeading = document.getElementById('dashboard-username');
-const navBar = document.getElementById('navigate-rooms');
 const datepicker = document.getElementById('datepicker');
 const roomTypeDropdown = document.getElementById('room-type-dropdown');
 const footer = document.getElementById('footer');
@@ -46,10 +42,8 @@ const todaysRevenue = document.getElementById('todays-revenue')
 const todaysOccupation = document.getElementById('todays-occupation')
 const homeImage = document.getElementById('main-image');
 
-const testButton = document.getElementById('test')
 
-
-window.addEventListener('load', () => {
+loginButton.addEventListener('click', () => {
   fetchAllData()
     .then(data => {
       storeLoginData()
@@ -58,27 +52,78 @@ window.addEventListener('load', () => {
       const bookingData = data[2].bookings;
       bookings = bookingData.map(booking => new Booking(booking));
       roomRepository = new RoomRepository(roomData);
-      // let currentUser = userData.find(user => `customer${user.id}` === currentUserName)
-      // user = new User(currentUser, bookings, roomRepository.rooms, currentDate);
-      // console.log(user)
       currentRooms = roomRepository.rooms;
-      // populateMainPage(currentRooms);
-      // populateRoomTypeDropdown(currentRooms);
-      // populateUserDashboard();
-      // hide(loginPage)
-      // show(header)
-      // show(homeImage)
+      if(currentUserName !== 'manager') {
+        userType = 'customer'
+        let currentUser = userData.find(user => `customer${user.id}` === currentUserName)
+        user = new User(currentUser, bookings, roomRepository.rooms, currentDate);
+        console.log(user.allBookings)
+        populateMainPage(currentRooms);
+        populateUserDashboard();
+        populateRoomTypeDropdown(currentRooms);
+        hide(loginPage)
+        show(header)
+        show(homeImage)
+      } else if(currentUserName === 'manager') {
+        userType = 'manager';
+        hide(loginPage)
+        populateMainPage(currentRooms);
+        populateManagerDashboard()
+        populateRoomTypeDropdown(currentRooms);
+        hide(loginPage)
+        show(header)
+        show(homeImage)
+      }
     })
+})
+
+myBookingsButton.addEventListener('click', () => {
+  if (userType === 'customer') {
+    customerBookings();
+  } else {
+    show(managerDashboard);
+    hide(homeImage)
+  }
+})
+
+bookRoomButton.addEventListener('click', () => {
+  populateBookingPage();
+})
+
+roomTypeDropdown.addEventListener('change', () => {
+  filterRoomsByType();
+})
+
+datepicker.addEventListener('change', () => {
+  pickDate();
+  filterAllRoomsByDate();
+})
+
+homeButton.addEventListener('click', () => {
+  if (view === 'main') {
+    hide(mainPage);
+    show(seeRoomsButton)
+  } else if (view === 'dashboard') {
+    hide(userDashboard);
+    show(myBookingsButton)
+  } else if (view === 'data') {
+    hide(bookingDataTable);
+  } else if (view === 'confirmation') {
+    hide(confirmationPage)
+  }
+  show(homeImage)
+  hide(homeButton)
+  view = 'home'
+})
+
+bookingDataButton.addEventListener('click', () => {
+  populateUserDataTable();
 })
 
 const storeLoginData = () => {
   currentUserName = usernameInput.value;
   currentUserPassword = passwordInput.value;
 }
-
-test.addEventListener('click', () => {
-  populateManagerDashboard()
-})
 
 const populateManagerDashboard = () => {
   let available = roomRepository.filterByDate('2022/01/11', bookings)
@@ -102,22 +147,9 @@ const populateManagerDashboard = () => {
   let occupationPercent = (available.length / 25) * 100;
 
   todaysOccupation.innerText = occupationPercent;
-
+  myBookingsButton.innerText = 'Manager Dashboard'
+  seeRoomsButton.innerText = 'Manage Bookings'
 }
-
-
-bookRoomButton.addEventListener('click', () => {
-  populateBookingPage();
-})
-
-roomTypeDropdown.addEventListener('change', () => {
-  filterRoomsByType();
-})
-
-datepicker.addEventListener('change', () => {
-  pickDate();
-  filterAllRoomsByDate();
-})
 
 const pickDate = () => {
   if (roomTypeDropdown.value !== 'select-value') {
@@ -129,7 +161,6 @@ const pickDate = () => {
 
 const filterAllRoomsByDate = () => {
   currentRooms = roomRepository.filterByDate(selectedDateData, bookings);
-
   resetPage();
   populateMainPage(currentRooms);
 }
@@ -146,6 +177,12 @@ const filterRoomsByType = () => {
 }
 
 seeRoomsButton.addEventListener('click', () => {
+  if (userType === 'customer') {
+    seeAllRooms();
+  }
+})
+
+const seeAllRooms = () => {
   if(view === 'home') {
     hide(homeImage);
   } else if (view === 'dashboard') {
@@ -160,7 +197,8 @@ seeRoomsButton.addEventListener('click', () => {
   show(myBookingsButton);
   hide(seeRoomsButton);
   view = 'main';
-})
+}
+
 const refreshUserBookings = () => {
   postNewBooking(user.id, selectedDateData, selectedRoom.number)
     .then(() => {
@@ -173,7 +211,9 @@ const refreshUserBookings = () => {
     })
 }
 
-myBookingsButton.addEventListener('click', () => {
+
+
+const customerBookings = () => {
   if (view === 'home') {
     hide(homeImage)
   } else if (view === 'main') {
@@ -189,28 +229,9 @@ myBookingsButton.addEventListener('click', () => {
   show(homeButton);
   show(seeRoomsButton);
   view = 'dashboard';
-})
+}
 
-homeButton.addEventListener('click', () => {
-  if (view === 'main') {
-    hide(mainPage);
-    show(seeRoomsButton)
-  } else if (view === 'dashboard') {
-    hide(userDashboard);
-    show(myBookingsButton)
-  } else if (view === 'data') {
-    hide(bookingDataTable);
-  } else if (view === 'confirmation') {
-    hide(confirmationPage)
-  }
-  show(homeImage)
-  hide(homeButton)
-  view = 'home'
-})
 
-bookingDataButton.addEventListener('click', () => {
-  populateUserDataTable();
-})
 
 const populateUserDataTable = () => {
   bookingDataTable.innerHTML = '';
@@ -301,7 +322,11 @@ const populateRoomTypeDropdown = (currentRooms) => {
 }
 
 const populateMainPage = (roomsToDisplay) => {
-  userGreeting.innerText += `Hello, ${user.name}`;
+  if (userType !== 'manager') {
+    userGreeting.innerText += `Hello, ${user.name}`;
+  } else {
+    userGreeting.innerText += `Hello, Manager`
+  }
 
   homeImage.innerHTML = '<img class="main-image" src="./images/overlook-hotel.png" alt="image of Overlook Hotel">'
   
@@ -362,6 +387,7 @@ const resetSelected = () => {
 
 const populateUserDashboard = () => {
   const userBookingList = user.allBookings;
+  console.log(roomCards)
 
   userBookingList.forEach(userBooking => {
     roomCards.forEach(roomCard => {

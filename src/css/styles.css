@@ -149,6 +149,14 @@ img {
   color:#941C2F
 }
 
+.manager-dashboard {
+  background-color: #FFFDF7;
+}
+
+/* .manager-data {
+  display: flex;
+} */
+
 #username, #password {
   display: flex;
   flex-direction: column;

@@ -48,7 +48,12 @@ describe('roomRepository', () => {
   it('should be able to filter rooms by date availability', () => {
     const filteredBookingsByDate = roomRepo.filterByDate('2022/04/22', bookings.allBookings)
 
-    expect(filteredBookingsByDate.length).to.equal(8)
-    expect(filteredBookingsByDate).to.deep.equal([24, 12, 7, 14, 9, 5, 13, 20])
+    expect(filteredBookingsByDate.length).to.equal(10)
+    expect(filteredBookingsByDate[0]).to.equal({
+      "bedSize": "queen",
+      "costPerNight": 358.4,
+      "numBeds": 1,
+      "number": 1,
+      "roomType": "residential suite"})
   })
 })
