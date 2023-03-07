@@ -100,6 +100,8 @@ seeRoomsButton.addEventListener('click', () => {
     hide(userDashboard);
   } else if (view === 'data') {
     hide(bookingDataTable)
+  } else if (view === 'confirmation') {
+    hide(confirmationPage)
   }
   show(mainPage);
   show(homeButton);
@@ -126,6 +128,8 @@ myBookingsButton.addEventListener('click', () => {
     hide(mainPage);
   } else if (view === 'data') {
     hide(bookingDataTable)
+  } else if (view === 'confirmation') {
+    hide(confirmationPage);
   }
   show(userDashboard);
   hide(myBookingsButton);
@@ -144,6 +148,8 @@ homeButton.addEventListener('click', () => {
     show(myBookingsButton)
   } else if (view === 'data') {
     hide(bookingDataTable);
+  } else if (view === 'confirmation') {
+    hide(confirmationPage)
   }
   show(homeImage)
   hide(homeButton)
@@ -164,7 +170,7 @@ bookingDataTable.innerHTML += `
     <th>Price</th>
   </tr>`
 
-
+  
   user.allBookings.forEach(userBooking => {
     roomRepository.rooms.forEach(room => {
       if (room.number === userBooking.roomNumber) {
@@ -179,6 +185,14 @@ bookingDataTable.innerHTML += `
       }
     })
   })
+
+  const totalUserPayments = user.getTotalSpendings(roomRepository.rooms)
+  bookingDataTable.innerHTML += `
+  <tr>
+    <th>Total Spendings</th>
+    <th>${Math.round(totalUserPayments)}</th>
+  </tr>
+  `
 
   show(bookingDataTable)
   hide(userDashboard)
@@ -285,26 +299,19 @@ const resetSelected = () => {
 }
 
 const populateUserDashboard = () => {
-  userPayments.innerHTML = '';
-  pastBookings.innerHTML = '<h2>Past Bookings</h2>';
-  upcomingBookings.innerHTML = '<h2>Upcoming Bookings</h2>';
   const userBookingList = user.allBookings;
 
   userBookingList.forEach(userBooking => {
     roomCards.forEach(roomCard => {
       if (userBooking.roomNumber.toString() === roomCard.id && dayjs(userBooking.date).isBefore(dayjs(currentDate))) {
         pastBookings.innerHTML += roomCard.innerHTML;
+        pastBookings.innerHTML += `<p>${userBooking.date}</p>`
       } else if (userBooking.roomNumber.toString() === roomCard.id && dayjs(userBooking.date).isAfter(dayjs(currentDate))){
         upcomingBookings.innerHTML += roomCard.innerHTML;
+        upcomingBookings.innerHTML += `<p>${userBooking.date}</p>`
       }
     })
   })
-
-  const totalUserPayments = user.getTotalSpendings(roomRepository.rooms)
-
-  userPayments.innerHTML += `
-  <p>You have spent $${Math.round(totalUserPayments)}</p>
-  `;
 }
 
 const hide = (element) => element.classList.add('hidden');
