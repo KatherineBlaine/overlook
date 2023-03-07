@@ -10,7 +10,7 @@ import './images/overlook-hotel.png';
 import RoomRepository from '../classes/room-repository-class';
 
 let view = 'home';
-let user, bookings, roomRepository, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom, dashboardView;
+let user, bookings, roomRepository, selectedDateData, selectedDateDOM, currentRooms, roomCards, selectedRoom, dashboardView, currentUserName, currentUserPassword;
 const currentDate = '2022/01/01';
 
 const myBookingsButton = document.getElementById('my-bookings');
@@ -34,25 +34,43 @@ const bookingPage = document.getElementById('booking-page');
 const confirmationPage = document.getElementById('confirmation-page');
 const bookingDataButton = document.getElementById('booking-data');
 const bookingDataTable = document.getElementById('user-table')
+const loginButton = document.getElementById('login-button')
+const usernameInput = document.getElementById('username-input')
+const passwordInput = document.getElementById('password-input')
+const header = document.getElementById('header')
+const loginPage = document.getElementById('login-page')
 
 const homeImage = document.getElementById('main-image');
 
-window.addEventListener('load', () => {
+
+loginButton.addEventListener('click', () => {
   fetchAllData()
     .then(data => {
+      storeLoginData()
       const userData = data[0].customers;
       const roomData = data[1].rooms;
       const bookingData = data[2].bookings;
       bookings = bookingData.map(booking => new Booking(booking));
-      // bookings = new BookingsRepository(bookingData, Booking);
       roomRepository = new RoomRepository(roomData);
-      user = new User(userData[0], bookings, roomRepository.rooms, currentDate);
+      let currentUser = userData.find(user => `customer${user.id}` === currentUserName)
+      user = new User(currentUser, bookings, roomRepository.rooms, currentDate);
+      // console.log(user)
       currentRooms = roomRepository.rooms;
       populateMainPage(currentRooms);
       populateRoomTypeDropdown(currentRooms);
       populateUserDashboard();
+      hide(loginPage)
+      show(header)
+      show(homeImage)
     })
 })
+
+const storeLoginData = () => {
+  currentUserName = usernameInput.value;
+  currentUserPassword = passwordInput.value;
+}
+
+
 
 bookRoomButton.addEventListener('click', () => {
   populateBookingPage();

@@ -12,7 +12,17 @@
   <title>Overlook</title>
 </head>
 <body>
-  <header>
+  <section id="login-page" class="login-page">
+    <h1 class="site-title">The Overlook Hotel</h1>
+    <section id="login-inputs" class="login-inputs">
+      <label id="username" for="username-input">Username<input type="text" id="username-input" name="username-input"></label>
+      <label id="password" for="password-input">Password<input type="text" id="password-input" name="password-input"></label>
+      <button id="login-button">LOGIN</button>
+    </section>
+  </section>
+
+
+  <header id="header" class="hidden">
       <h1 class="site-title">The Overlook Hotel</h1>
       <nav class="main-nav">
         <button id="home" class="hidden">Home</button>
@@ -24,10 +34,8 @@
         <p id="user-greeting"></p>
       </div>
   </header>
+  <section class="main-image-section hidden"id="main-image"></section>
 
-
-
-  <section class="main-image-section"id="main-image"></section>
 
 
   <main id="main-page" class="hidden">
@@ -42,6 +50,8 @@
     </nav>
     <section class="all-room-cards" id="all-room-cards"></section>
   </main>
+
+
   <section class="user-dashboard hidden" id="user-dashboard">
     <section class="dashboard-heading">
       <h1 id="dashboard-username">My Account</h1>
@@ -56,7 +66,6 @@
         <h2>Past Bookings</h2>
         <section id="past-bookings"></section>
       </section>
-      <!-- <section id="user-payments"></section> -->
     </section>
   </section>
   <table class="user-table hidden" id="user-table"></table>

@@ -137,6 +137,35 @@ img {
   width: 250px;
 }
 
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#login-button {
+  background-color: white;
+  color:#941C2F
+}
+
+#username, #password {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-inputs {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  background-color: #941C2F;
+  color: white;
+  height: 200px;
+  width: 400px;
+}
+
 .user-dashboard {
   margin: 5px;
   height: 100%;
