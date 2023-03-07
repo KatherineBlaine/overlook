@@ -100,6 +100,8 @@ seeRoomsButton.addEventListener('click', () => {
     hide(userDashboard);
   } else if (view === 'data') {
     hide(bookingDataTable)
+  } else if (view === 'confirmation') {
+    hide(confirmationPage)
   }
   show(mainPage);
   show(homeButton);
@@ -126,6 +128,8 @@ myBookingsButton.addEventListener('click', () => {
     hide(mainPage);
   } else if (view === 'data') {
     hide(bookingDataTable)
+  } else if (view === 'confirmation') {
+    hide(confirmationPage);
   }
   show(userDashboard);
   hide(myBookingsButton);
@@ -144,6 +148,8 @@ homeButton.addEventListener('click', () => {
     show(myBookingsButton)
   } else if (view === 'data') {
     hide(bookingDataTable);
+  } else if (view === 'confirmation') {
+    hide(confirmationPage)
   }
   show(homeImage)
   hide(homeButton)
@@ -293,17 +299,16 @@ const resetSelected = () => {
 }
 
 const populateUserDashboard = () => {
-  userPayments.innerHTML = '';
-  pastBookings.innerHTML = '<h2>Past Bookings</h2>';
-  upcomingBookings.innerHTML = '<h2>Upcoming Bookings</h2>';
   const userBookingList = user.allBookings;
 
   userBookingList.forEach(userBooking => {
     roomCards.forEach(roomCard => {
       if (userBooking.roomNumber.toString() === roomCard.id && dayjs(userBooking.date).isBefore(dayjs(currentDate))) {
         pastBookings.innerHTML += roomCard.innerHTML;
+        pastBookings.innerHTML += `<p>${userBooking.date}</p>`
       } else if (userBooking.roomNumber.toString() === roomCard.id && dayjs(userBooking.date).isAfter(dayjs(currentDate))){
         upcomingBookings.innerHTML += roomCard.innerHTML;
+        upcomingBookings.innerHTML += `<p>${userBooking.date}</p>`
       }
     })
   })
