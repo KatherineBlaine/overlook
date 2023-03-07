@@ -251,18 +251,28 @@ const populateRoomTypeDropdown = (currentRooms) => {
 const populateMainPage = (roomsToDisplay) => {
   userGreeting.innerText += `Hello, ${user.name}`;
 
-  homeImage.innerHTML = '<img class="main-image" src="./images/overlook-hotel.png">'
+  homeImage.innerHTML = '<img class="main-image" src="./images/overlook-hotel.png" alt="image of Overlook Hotel">'
   
   roomsToDisplay.forEach(room => {
     allRoomCards.innerHTML += `
-    <figure class="room-card card-data" id="${room.number}">
-      <img class="card-data" src="./images/hotel-room.png" alt="room img">
+    <figure tabindex='0' class="room-card card-data" id="${room.number}">
+      <img class="card-data" src="./images/hotel-room.png" alt="image of ${room.roomType}">
         <h2 class="card-data">${room.roomType}</h2>
         <h3 class="card-data">${room.numBeds} ${room.bedSize} bed</h3>
         <p class="card-data">$${room.costPerNight} per night</p>
       </figcaption>
     </figure>
     `;
+  })
+
+  roomCards = document.querySelectorAll('.room-card');
+  roomCards.forEach(roomCard => {
+  roomCard.addEventListener('keydown', (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      roomCard.click();
+    } 
+  })
   })
 
   roomCards = document.querySelectorAll('.room-card');
